@@ -35,6 +35,7 @@ import ovhManagerIncidentBanner from '@ovh-ux/manager-incident-banner';
 import ovhManagerMfaEnrollment from '@ovh-ux/mfa-enrollment';
 import ovhManagerNasha from '@ovh-ux/manager-nasha';
 import ovhManagerNavbar from '@ovh-ux/manager-navbar';
+import ovhManagerStorage from '@ovh-ux/manager-storage';
 import ovhManagerServerSidebar from '@ovh-ux/manager-server-sidebar';
 import ovhManagerSupport from '@ovh-ux/manager-support';
 import ovhPaymentMethod from '@ovh-ux/ng-ovh-payment-method';
@@ -146,6 +147,7 @@ angular
       ovhManagerEnterpriseCloudDatabase,
       ovhManagerMetrics,
       ovhManagerNasha,
+      ovhManagerStorage,
       ovhManagerNavbar,
       ovhManagerVps,
       ovhManagerVrack,
