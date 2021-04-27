@@ -19,7 +19,7 @@
   "xdsl_modem_ports_firewall_info": "Afin d'assurer le bon fonctionnement de vos règles de redirections, le pare-feu de votre modem doit-être désactiver.",
   "xdsl_modem_ports_firewall_explaination": "La sécurité de votre réseau n'en sera pas impactée. Le pare-feu laissera seulement passer les requêtes entrantes à destination d'une IP faisant l'objet d'une règle de redirection.",
   "xdsl_modem_ports_read_error": "Oups ! Nous n'avons pas réussi à lire vos redirections de ports.",
-  "xdsl_modem_ports_add_error": "Impossible d'ajouter la redirection de port <strong>{{ name }}</strong>",
+  "xdsl_modem_ports_add_error": "Impossible d'ajouter la redirection de port <strong>{{ name }}</strong> : {{ reason }}",
   "xdsl_modem_ports_edit_error": "Impossible de mettre à jour la redirection de port <strong>{{ name }}</strong>",
   "xdsl_modem_ports_del_error": "Impossible de mettre à jour la redirection de port <strong>{{ name }}</strong>"
 }

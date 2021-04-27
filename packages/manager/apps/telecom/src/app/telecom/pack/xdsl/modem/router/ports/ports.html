@@ -98,8 +98,10 @@
                     ></td>
                     <td
                         data-title="{{ 'xdsl_modem_ports_internal_port' | translate }}"
-                        data-ng-bind="port.internalPort"
-                    ></td>
+                    >
+                        <div data-ng-bind="port.internalPort"></div>
+                        <div data-ng-bind="port.internalPortEnd"></div>
+                    </td>
                     <td class="dropdown">
                         <div
                             class="btn-group"
@@ -308,6 +310,18 @@
                             class="form-control"
                             data-ng-model="port.tempValue.internalPort"
                             placeholder="8080"
+                            maxlength="5"
+                            min="1"
+                            required
+                            max="65535"
+                        />
+                        <input
+                            type="number"
+                            name="internalPortEnd"
+                            id="internalPortEnd"
+                            class="form-control"
+                            data-ng-model="port.tempValue.internalPortEnd"
+                            placeholder="8085"
                             maxlength="5"
                             min="1"
                             required
