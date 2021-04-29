@@ -3,6 +3,8 @@ import map from 'lodash/map';
 import remove from 'lodash/remove';
 import set from 'lodash/set';
 
+import { PACK_XDSL } from './ports.constants';
+
 export default /* @ngInject */ function XdslModemPortsCtrl(
   $stateParams,
   $translate,
@@ -12,7 +14,6 @@ export default /* @ngInject */ function XdslModemPortsCtrl(
   PackXdslModemPortObject,
   tucValidator,
   TucPackXdslModemMediator,
-  PACK_XDSL,
 ) {
   const self = this;
   self.loader = true;
