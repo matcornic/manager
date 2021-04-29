@@ -99,8 +99,8 @@
                     <td
                         data-title="{{ 'xdsl_modem_ports_internal_port' | translate }}"
                     >
-                        <div data-ng-bind="port.internalPort"></div>
-                        <div data-ng-bind="port.internalPortEnd"></div>
+                        <span class="d-block" data-ng-bind="port.internalPort"></span>
+                        <span class="d-block" data-ng-bind="port.internalPortEnd"></span>
                     </td>
                     <td class="dropdown">
                         <div
@@ -220,11 +220,11 @@
                             id="portExternalPortStart"
                             class="form-control"
                             data-ng-model="port.tempValue.externalPortStart"
-                            maxlength="5"
-                            min="1"
-                            max="65535"
+                            maxlength="{{PortCtrl.pack_xdsl.maxlength}}"
+                            min="{{PortCtrl.pack_xdsl.min}}"
+                            max="{{PortCtrl.pack_xdsl.max}}"
                             required
-                            placeholder="80"
+                            placeholder="{{PortCtrl.pack_xdsl.portExternalPortStartPlaceHolder}}"
                         />
                     </td>
 
@@ -244,11 +244,11 @@
                             id="portExternalPortEnd"
                             class="form-control"
                             data-ng-model="port.tempValue.externalPortEnd"
-                            maxlength="5"
-                            min="1"
-                            max="65535"
+                            maxlength="{{PortCtrl.pack_xdsl.maxlength}}"
+                            min="{{PortCtrl.pack_xdsl.min}}"
+                            max="{{PortCtrl.pack_xdsl.max}}"
                             required
-                            placeholder="85"
+                            placeholder="{{PortCtrl.pack_xdsl.portExternalPortEndPlaceHolder}}"
                         />
                     </td>
 
@@ -307,25 +307,25 @@
                             type="number"
                             name="internalPort"
                             id="internalPort"
-                            class="form-control"
+                            class="oui-input"
                             data-ng-model="port.tempValue.internalPort"
-                            placeholder="8080"
-                            maxlength="5"
-                            min="1"
+                            placeholder="{{PortCtrl.pack_xdsl.internalPortPlaceHolder}}"
+                            maxlength="{{PortCtrl.pack_xdsl.maxlength}}"
+                            min="{{PortCtrl.pack_xdsl.min}}"
                             required
-                            max="65535"
+                            max="{{PortCtrl.pack_xdsl.maxlength}}"
                         />
                         <input
                             type="number"
                             name="internalPortEnd"
                             id="internalPortEnd"
-                            class="form-control"
+                            class="oui-input"
                             data-ng-model="port.tempValue.internalPortEnd"
-                            placeholder="8085"
-                            maxlength="5"
-                            min="1"
+                            placeholder="{{PortCtrl.pack_xdsl.internalPortEndPlaceHolder}}"
+                            maxlength="{{PortCtrl.pack_xdsl.maxlength}}"
+                            min="{{PortCtrl.pack_xdsl.min}}"
                             required
-                            max="65535"
+                            max="{{PortCtrl.pack_xdsl.maxlength}}"
                         />
                     </td>
 

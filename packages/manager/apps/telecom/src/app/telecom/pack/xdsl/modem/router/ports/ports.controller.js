@@ -12,11 +12,13 @@ export default /* @ngInject */ function XdslModemPortsCtrl(
   PackXdslModemPortObject,
   tucValidator,
   TucPackXdslModemMediator,
+  PACK_XDSL,
 ) {
   const self = this;
   self.loader = true;
   this.validator = tucValidator;
   this.mediator = TucPackXdslModemMediator;
+  this.pack_xdsl = PACK_XDSL;
 
   this.protocol = ['TCP', 'UDP'];
 

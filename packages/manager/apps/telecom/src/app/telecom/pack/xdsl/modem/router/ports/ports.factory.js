@@ -91,7 +91,7 @@ export default /* @ngInject */ (OvhApiXdsl, $translate, TucToast) => {
         TucToast.error(
           $translate.instant('xdsl_modem_ports_add_error', {
             name: self.name,
-            reason: error.data && error.data.message ? error.data.message : '',
+            reason: error.data?.message || '',
           }),
         );
       })

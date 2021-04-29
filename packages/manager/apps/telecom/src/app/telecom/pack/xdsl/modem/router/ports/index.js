@@ -6,6 +6,7 @@ import 'angular-translate';
 import 'ovh-api-services';
 
 import controller from './ports.controller';
+import constant from './ports.constants';
 import factory from './ports.factory';
 import template from './ports.html';
 
@@ -21,6 +22,7 @@ angular
   ])
   .controller('XdslModemPortsCtrl', controller)
   .factory('PackXdslModemPortObject', factory)
+  .constant('PACK_XDSL', constant)
   .run(/* @ngTranslationsInject:json ./translations */)
   .run(
     /* @ngInject */ ($templateCache) => {
