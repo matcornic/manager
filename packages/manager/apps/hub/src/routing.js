@@ -17,11 +17,15 @@ const transformBillingServices = (services) => {
     ? services
     : {
         count: get(services, 'data.count'),
-        data: map(services.data.data, (service) => new BillingService(service)),
+        data: map(services.data.data, (service) => {
+          console.log(new BillingService(service));
+          return new BillingService(service);
+        }),
       };
 };
 
 const transformOrder = ($q, lastOrder, OrderTracking) => {
+  console.log(lastOrder);
   const latestOrder = lastOrder.data;
   return latestOrder
     ? $q
@@ -52,40 +56,74 @@ export default /* @ngInject */ ($stateProvider, $urlRouterProvider) => {
       sidebar: /* @ngInject */ ($rootScope) => {
         $rootScope.$broadcast('sidebar:loaded');
       },
-      billingServices: /* @ngInject */ (hub) =>
-        transformBillingServices(hub.billingServices),
+      billingServices: /* @ngInject */ ($http) =>
+        $http
+          .get('/hub/billingServices', {
+            serviceType: 'aapi',
+          })
+          .then((data) => {
+            console.log('Billing services : ', data.data.data.billingServices);
+            transformBillingServices(data.data.data.billingServices);
+          }),
       refreshBillingServices: /* @ngInject */ (refresh) => () =>
         refresh('billingServices').then((hub) =>
           transformBillingServices(hub.billingServices),
         ),
-      bills: /* @ngInject */ (hub) => hub.bills,
-      debt: /* @ngInject */ (hub) => hub.debt,
-      catalog: /* @ngInject */ (hub) => hub.catalog,
-      certificates: /* @ngInject */ (hub) => hub.certificates.data,
-      me: /* @ngInject */ (certificates, hub) =>
-        new User(hub.me.data, certificates),
-      notifications: /* @ngInject */ ($translate, hub) =>
-        map(
-          filter(hub.notifications.data, (notification) =>
-            ['warning', 'error'].includes(notification.level),
-          ),
-          (notification) => ({
-            ...notification,
-            // force sanitization to null as this causes issues with UTF-8 characters
-            description: $translate.instant(
-              'manager_hub_notification_warning',
-              { content: notification.description },
-              undefined,
-              false,
-              null,
-            ),
+      bills: /* @ngInject */ ($http) =>
+        $http
+          .get('/hub/bills', { serviceType: 'aapi' })
+          .then((data) => data.data.data.bills),
+      debt: /* @ngInject */ ($http) =>
+        $http
+          .get('/hub/debt', { serviceType: 'aapi' })
+          .then((data) => data.data.data.debt),
+      catalog: /* @ngInject */ ($http) =>
+        $http
+          .get('/hub/catalog', { serviceType: 'aapi' })
+          .then((data) => data.data.data.catalog),
+      certificates: /* @ngInject */ ($http) =>
+        $http
+          .get('/hub/certificates', { serviceType: 'aapi' })
+          .then((data) => data.data.data.certificates.data),
+      me: /* @ngInject */ (certificates, $http) =>
+        $http
+          .get('/hub/me', { serviceType: 'aapi' })
+          .then((data) => new User(data.data.data.me.data, certificates)),
+      notifications: /* @ngInject */ ($translate, $http) =>
+        $http
+          .get('/hub/notifications', { serviceType: 'aapi' })
+          .then((data) => {
+            console.log('notifs : ', data.data.data.notifications.data);
+            map(
+              filter(data.data.data.notifications.data, (notification) => {
+                console.log(notification);
+                return ['warning', 'error'].includes(notification.level);
+              }),
+              (notification) => ({
+                ...notification,
+                // force sanitization to null as this causes issues with UTF-8 characters
+                description: $translate.instant(
+                  'manager_hub_notification_warning',
+                  { content: notification.description },
+                  undefined,
+                  false,
+                  null,
+                ),
+              }),
+            );
           }),
-        ),
-      order: /* @ngInject */ ($q, hub, OrderTracking) =>
-        transformOrder($q, hub.lastOrder, OrderTracking),
+      order: /* @ngInject */ ($q, $http, OrderTracking) =>
+        $http
+          .get('/hub/lastOrder', { serviceType: 'aapi' })
+          .then((data) =>
+            transformOrder($q, data.data.data.lastOrder, OrderTracking),
+          ),
       refreshOrder: /* @ngInject */ (refresh) => () =>
         refresh('lastOrder').then((lastOrder) => transformOrder(lastOrder)),
-      services: /* @ngInject */ (hub) => hub.services,
+      services: /* @ngInject */ ($http) =>
+        $http
+          .get('/hub/services', { serviceType: 'aapi' })
+          .then((data) => data.data.data.services),
 
       hub: /* @ngInject */ ($http) =>
         $http
@@ -94,7 +132,10 @@ export default /* @ngInject */ ($stateProvider, $urlRouterProvider) => {
           })
           .then(({ data }) => parseErrors(data)),
 
-      tickets: /* @ngInject */ (hub) => hub.support.data,
+      tickets: /* @ngInject */ ($http) =>
+        $http
+          .get('/hub/support', { serviceType: 'aapi' })
+          .then((data) => data.data.data.support.data),
       trackingPrefix: () => 'hub::dashboard::activity::payment-status',
 
       refresh: /* @ngInject */ ($http) => (type) =>

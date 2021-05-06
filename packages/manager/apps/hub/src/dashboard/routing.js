@@ -11,8 +11,11 @@ export default /* @ngInject */ ($stateProvider, $urlRouterProvider) => {
       },
     },
     resolve: {
-      products: /* @ngInject */ (catalog, order, services) =>
-        get(services, 'data.count') === 0 && !order
+      products: /* @ngInject */ (catalog, order, services) => {
+        console.log('catalog :', catalog);
+        console.log('order: ', order);
+        console.log('services : ', services);
+        return get(services, 'data.count') === 0 && !order
           ? groupBy(
               filter(catalog.data, ({ highlight }) => highlight),
               'universe',
@@ -25,8 +28,8 @@ export default /* @ngInject */ ($stateProvider, $urlRouterProvider) => {
                 })),
                 'count',
               ),
-            ),
-
+            );
+      },
       goToProductPage: /* @ngInject */ ($state, atInternet, trackingPrefix) => (
         product,
       ) => {
