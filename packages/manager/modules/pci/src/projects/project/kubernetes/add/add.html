@@ -3,14 +3,17 @@
 <cui-message-container data-messages="$ctrl.messages"></cui-message-container>
 
 <oui-stepper>
+    <!--Select region-->
     <oui-step-form
         name="kubernetes_add_region"
         data-header="{{:: 'kubernetes_add_region_title' | translate }}"
         data-editable="!$ctrl.isAdding"
-        data-valid="$ctrl.cluster.region"
+        data-valid="$ctrl.cluster.region.enabled"
         data-navigation="$ctrl.cluster.region"
         data-on-focus="$ctrl.displaySelectedRegion = false"
         data-on-submit="$ctrl.onRegionSubmit()"
+        data-loading-text="{{ 'kubernetes_add_region_inprogress' | translate: { name: $ctrl.cluster.region.name } }}"
+        data-loading="$ctrl.isAddingNewRegion"
     >
         <pci-project-regions-list
             data-regions="$ctrl.regions"
@@ -18,6 +21,8 @@
             data-display-selected-region="$ctrl.displaySelectedRegion"
         ></pci-project-regions-list>
     </oui-step-form>
+
+    <!--Select kube version-->
     <oui-step-form
         data-header="{{:: 'kubernetes_add_version_title' | translate }}"
         data-editable="!$ctrl.isAdding"
@@ -35,7 +40,8 @@
         >
         </pci-project-versions-list>
     </oui-step-form>
-    <!-- private network -->
+
+    <!--Select private network -->
     <oui-step-form
         data-header="{{:: 'kubernetes_add_private_network' | translate }}"
         data-editable="!$ctrl.isAdding"
@@ -67,7 +73,7 @@
         </oui-field>
     </oui-step-form>
 
-    <!-- select node pool configuration -->
+    <!--Select node pool configuration -->
     <oui-step-form
         data-header="{{:: 'kube_common_node_pool_title' | translate }}"
         data-editable="!$ctrl.isAdding"
@@ -90,6 +96,7 @@
         </node-pool-configuration>
     </oui-step-form>
 
+    <!--Billing and AntiAffinity -->
     <oui-step-form
         data-header="{{:: 'kubernetes_add_billing_anti_affinity_title' | translate }}"
         data-editable="!$ctrl.isAdding"
@@ -114,6 +121,7 @@
         <p data-translate="kubernetes_add_billing_type_payment_method"></p>
     </oui-step-form>
 
+    <!--Chose the kube name-->
     <oui-step-form
         data-header="{{:: 'kubernetes_add_name_title' | translate }}"
         data-editable="!$ctrl.isAdding"

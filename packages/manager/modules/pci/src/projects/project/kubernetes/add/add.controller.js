@@ -129,13 +129,48 @@ export default class {
   }
 
   onRegionSubmit() {
-    this.cluster.region = new Datacenter({
-      name: this.cluster.region.name,
-      quota: find(this.quotas, { region: this.cluster.region.name }),
-    });
-    this.loadFlavors(this.cluster.region.name);
-    this.loadPrivateNetworks();
-    this.displaySelectedRegion = true;
+    const { region } = this.cluster;
+    const { name, enabled } = region;
+
+    this.$q
+      .when()
+      .then(() => {
+        if (!enabled) {
+          this.displaySelectedRegion = false;
+          this.isAddingNewRegion = true;
+
+          return this.Kubernetes.addRegion(this.projectId, region);
+        }
+        return this.$q.when();
+      })
+      .then(() => {
+        return this.loadQuotas().then((q) => {
+          console.log('ZM:: q', JSON.parse(JSON.stringify(q)));
+          this.quotas = q;
+          console.log('ZM:: this.quotas', this.quotas);
+        });
+      })
+      .then(() => {
+        this.cluster.region = new Datacenter({
+          name,
+          enabled: true,
+          quota: find(this.quotas, { region: region.name }),
+        });
+        this.loadFlavors(name);
+        this.loadPrivateNetworks();
+        this.displaySelectedRegion = true;
+      })
+      .catch(({ data: error }) => {
+        this.CucCloudMessage.error(
+          this.$translate.instant('kubernetes_add_region_failed', {
+            name,
+            message: error.message,
+          }),
+        );
+      })
+      .finally(() => {
+        this.isAddingNewRegion = false;
+      });
   }
 
   loadPrivateNetworks() {
