@@ -16,7 +16,21 @@ export default class ManagerHubBillingSummaryCtrl {
       '#/billing/history/debt/all/pay',
     );
     this.loading = true;
-    const loadBills = this.$q
+    this.$translate.refresh().then(() => {
+      this.periods = [1, 3, 6].map((months) => ({
+        value: months,
+        label: this.$translate.instant(`hub_billing_summary_period_${months}`),
+      }));
+      [this.billingPeriod] = this.periods;
+    });
+
+    return this.$q.all([this.loadBills(), this.loadDebt()]).finally(() => {
+      this.loading = false;
+    });
+  }
+
+  loadBills() {
+    this.$q
       .when(this.bills ? this.bills : this.fetchBills())
       .then(({ data }) => {
         this.bills = data;
@@ -27,27 +41,16 @@ export default class ManagerHubBillingSummaryCtrl {
         this.buildPeriodFilter(data.period);
         return this.bills;
       });
-    const loadDebt = this.$q
-      .when(this.debt ? this.debt : this.fetchDebt())
-      .then(({ data }) => {
-        this.debt = data;
-        this.formattedDebtPrice = this.getFormattedPrice(
-          get(data, 'dueAmount.value'),
-          get(data, 'dueAmount.currencyCode'),
-        );
-        return this.debt;
-      });
+  }
 
-    this.$translate.refresh().then(() => {
-      this.periods = [1, 3, 6].map((months) => ({
-        value: months,
-        label: this.$translate.instant(`hub_billing_summary_period_${months}`),
-      }));
-      [this.billingPeriod] = this.periods;
-    });
-
-    return this.$q.all([loadBills, loadDebt]).finally(() => {
-      this.loading = false;
+  loadDebt() {
+    this.$q.when(this.debt ? this.debt : this.fetchDebt()).then(({ data }) => {
+      this.debt = data;
+      this.formattedDebtPrice = this.getFormattedPrice(
+        get(data, 'dueAmount.value'),
+        get(data, 'dueAmount.currencyCode'),
+      );
+      return this.debt;
     });
   }
 

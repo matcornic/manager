@@ -1,24 +1,29 @@
-import { isString } from 'lodash-es';
+import { isString, map, filter, head, get } from 'lodash-es';
+import { BillingService } from '@ovh-ux/manager-models';
 
 export default class HubController {
   /* @ngInject */
   constructor(
     $document,
     $http,
+    $q,
     $scope,
     $state,
     $rootScope,
     coreConfig,
     ovhFeatureFlipping,
+    OrderTracking,
   ) {
     this.$document = $document;
     this.$http = $http;
+    this.$q = $q;
     this.$scope = $scope;
     this.$state = $state;
     this.$rootScope = $rootScope;
     this.chatbotEnabled = false;
     this.coreConfig = coreConfig;
     this.ovhFeatureFlipping = ovhFeatureFlipping;
+    this.OrderTracking = OrderTracking;
   }
 
   $onInit() {
@@ -50,6 +55,18 @@ export default class HubController {
       unregisterListener();
     });
 
+    // this.bills = this.getHubSubData('bills');
+    // this.debt = this.getHubSubData('debt');
+    // this.catalog = this.getHubSubData('catalog');
+    // this.certificates = this.$q(this.getHubSubData('certificates')).then(
+    //   (data) => data,
+    // );
+    // this.me = new User(this.getHubSubData('me'), this.certificates);
+    // this.notifications = this.getNotifications();
+    // this.order = this.getOrder();
+    // this.services = this.getHubSubData('services');
+    // this.tickets = this.getHubSubData('support')?.data;
+
     return this.getServicesImpactedByIncident();
   }
 
@@ -74,6 +91,69 @@ export default class HubController {
         this.servicesImpactedWithIncident = data;
       })
       .catch(() => []);
+  }
+
+  getHubSubData(subdata) {
+    this.$http
+      .get(`/hub/${subdata}`, { serviceType: 'aapi' })
+      .then((data) => data.data.data[subdata])
+      .catch(() => null);
+  }
+
+  async getNotifications() {
+    const notifications = await this.getHubSubData('notifications')?.data;
+    return map(
+      filter(
+        notifications,
+        (notification) => ['warning', 'error'].includes(notification.level),
+        (notification) => ({
+          ...notification,
+          // force sanitization to null as this causes issues with UTF-8 characters
+          description: this.$translate.instant(
+            'manager_hub_notification_warning',
+            { content: notification.description },
+            undefined,
+            false,
+            null,
+          ),
+        }),
+      ),
+    );
+  }
+
+  async getBillingServices() {
+    const services = await this.getHubSubData('billingServices');
+
+    return services.status === 'ERROR'
+      ? services
+      : {
+          count: get(services, 'data.count'),
+          data: map(services.data.data, (service) => {
+            return new BillingService(service);
+          }),
+        };
+  }
+
+  async getOrder() {
+    const latestOrder = await this.getHubSubData('lastOrder').data;
+    return latestOrder
+      ? this.$q
+          .all({
+            status: this.OrderTracking.getOrderStatus(latestOrder),
+            details: this.OrderTracking.getOrderDetails(latestOrder),
+          })
+          .then(({ status, details }) => ({
+            ...latestOrder,
+            status,
+            ...head(details),
+          }))
+          .then((order) =>
+            this.OrderTracking.getCompleteHistory(order).then((history) => ({
+              ...order,
+              ...history,
+            })),
+          )
+      : this.$q.resolve();
   }
 
   goToIncidentStatus() {

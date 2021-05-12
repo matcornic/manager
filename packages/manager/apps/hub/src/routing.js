@@ -1,4 +1,4 @@
-import { filter, get, head, map, mapValues } from 'lodash-es';
+import { get, map, mapValues, head } from 'lodash-es';
 
 import { BillingService, User } from '@ovh-ux/manager-models';
 
@@ -18,14 +18,12 @@ const transformBillingServices = (services) => {
     : {
         count: get(services, 'data.count'),
         data: map(services.data.data, (service) => {
-          console.log(new BillingService(service));
           return new BillingService(service);
         }),
       };
 };
 
 const transformOrder = ($q, lastOrder, OrderTracking) => {
-  console.log(lastOrder);
   const latestOrder = lastOrder.data;
   return latestOrder
     ? $q
@@ -56,31 +54,14 @@ export default /* @ngInject */ ($stateProvider, $urlRouterProvider) => {
       sidebar: /* @ngInject */ ($rootScope) => {
         $rootScope.$broadcast('sidebar:loaded');
       },
-      billingServices: /* @ngInject */ ($http) =>
-        $http
-          .get('/hub/billingServices', {
-            serviceType: 'aapi',
-          })
-          .then((data) => {
-            console.log('Billing services : ', data.data.data.billingServices);
-            transformBillingServices(data.data.data.billingServices);
-          }),
       refreshBillingServices: /* @ngInject */ (refresh) => () =>
         refresh('billingServices').then((hub) =>
           transformBillingServices(hub.billingServices),
         ),
-      bills: /* @ngInject */ ($http) =>
-        $http
-          .get('/hub/bills', { serviceType: 'aapi' })
-          .then((data) => data.data.data.bills),
-      debt: /* @ngInject */ ($http) =>
-        $http
-          .get('/hub/debt', { serviceType: 'aapi' })
-          .then((data) => data.data.data.debt),
-      catalog: /* @ngInject */ ($http) =>
-        $http
-          .get('/hub/catalog', { serviceType: 'aapi' })
-          .then((data) => data.data.data.catalog),
+      // catalog: /* @ngInject */ ($http) =>
+      //   $http
+      //     .get('/hub/catalog', { serviceType: 'aapi' })
+      //     .then((data) => data.data.data.catalog),
       certificates: /* @ngInject */ ($http) =>
         $http
           .get('/hub/certificates', { serviceType: 'aapi' })
@@ -89,55 +70,27 @@ export default /* @ngInject */ ($stateProvider, $urlRouterProvider) => {
         $http
           .get('/hub/me', { serviceType: 'aapi' })
           .then((data) => new User(data.data.data.me.data, certificates)),
-      notifications: /* @ngInject */ ($translate, $http) =>
-        $http
-          .get('/hub/notifications', { serviceType: 'aapi' })
-          .then((data) => {
-            console.log('notifs : ', data.data.data.notifications.data);
-            map(
-              filter(data.data.data.notifications.data, (notification) => {
-                console.log(notification);
-                return ['warning', 'error'].includes(notification.level);
-              }),
-              (notification) => ({
-                ...notification,
-                // force sanitization to null as this causes issues with UTF-8 characters
-                description: $translate.instant(
-                  'manager_hub_notification_warning',
-                  { content: notification.description },
-                  undefined,
-                  false,
-                  null,
-                ),
-              }),
-            );
-          }),
       order: /* @ngInject */ ($q, $http, OrderTracking) =>
         $http
           .get('/hub/lastOrder', { serviceType: 'aapi' })
           .then((data) =>
             transformOrder($q, data.data.data.lastOrder, OrderTracking),
           ),
-      refreshOrder: /* @ngInject */ (refresh) => () =>
-        refresh('lastOrder').then((lastOrder) => transformOrder(lastOrder)),
-      services: /* @ngInject */ ($http) =>
+      // services: /* @ngInject */ ($http) =>
+      //   $http
+      //     .get('/hub/services', { serviceType: 'aapi' })
+      //     .then((data) => data.data.data.services),
+      numberOfServices: /* ngInject */ ($http) => {
         $http
-          .get('/hub/services', { serviceType: 'aapi' })
-          .then((data) => data.data.data.services),
-
-      hub: /* @ngInject */ ($http) =>
-        $http
-          .get('/hub', {
-            serviceType: 'aapi',
+          .get('/services', {
+            headers: {
+              'X-Pagination-Mode': 'CachedObjectList-Pages',
+              'X-Pagination-Size': 5,
+            },
           })
-          .then(({ data }) => parseErrors(data)),
-
-      tickets: /* @ngInject */ ($http) =>
-        $http
-          .get('/hub/support', { serviceType: 'aapi' })
-          .then((data) => data.data.data.support.data),
+          .then((data) => data.data.length);
+      },
       trackingPrefix: () => 'hub::dashboard::activity::payment-status',
-
       refresh: /* @ngInject */ ($http) => (type) =>
         $http
           .get(`/hub/${type}`, {
