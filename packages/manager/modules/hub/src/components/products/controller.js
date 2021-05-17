@@ -1,65 +1,50 @@
-// import { filter, get, groupBy, map, reverse, sortBy } from 'lodash-es';
 import {
   DEFAULT_DISPLAYED_TILES,
   DISPLAYED_PRODUCTS_NUMBER,
 } from './constants';
 
-// const getProducts = (services, order, catalog) => {
-//   return get(services, 'data.count') === 0 && !order
-//     ? groupBy(
-//         filter(catalog.data, ({ highlight }) => highlight),
-//         'universe',
-//       )
-//     : reverse(
-//         sortBy(
-//           map(services.data?.data, (service, productType) => ({
-//             ...service,
-//             productType,
-//           })),
-//           'count',
-//         ),
-//       );
-// };
-
 export default class ProductsController {
   /* @ngInject */
-  constructor($q, $http) {
+  constructor($state, atInternet) {
     this.DEFAULT_DISPLAYED_TILES = DEFAULT_DISPLAYED_TILES;
     this.DISPLAYED_PRODUCTS_NUMBER = DISPLAYED_PRODUCTS_NUMBER;
-    this.$q = $q;
-    this.$http = $http;
-    // this.products = [];
+    this.$state = $state;
+    this.atInternet = atInternet;
   }
 
-  // $onInit() {
-  //   // console.log(this.order);
-  //   const catalogPromise = this.$http.get('/hub/catalog', {
-  //     serviceType: 'aapi',
-  //   });
-  //   const servicesPromise = this.$http.get('/hub/services', {
-  //     serviceType: 'aapi',
-  //   });
-  //   const order = this.$http.get('/hub/lastOrder', {
-  //     serviceType: 'aapi',
-  //   });
-
-  //   this.$q
-  //     .all([catalogPromise, servicesPromise, order])
-  //     .then((responseArray) => {
-  //       const { catalog } = responseArray[0].data.data;
-  //       const { services } = responseArray[1].data.data;
-  //       const { lastOrder } = responseArray[2].data.data;
-
-  //       this.products = getProducts(services, lastOrder, catalog);
-  //     });
-  // }
+  $onInit() {
+    this.products.then((data) => {
+      this.items = data;
+    });
+  }
 
   toggleExpand() {
     this.expand = !this.expand;
-    this.onExpand({ expand: this.expand || null });
+    // this.onExpand({ expand: this.expand || null });
   }
 
   static formatProductTypeTracker(productType) {
     return productType.toLowerCase().replace(/_/g, '-');
+  }
+
+  goToProductPage(productObject) {
+    const product = productObject.productType;
+    this.atInternet.trackClick({
+      name: `${this.trackingPrefix}::product::${product
+        .toLowerCase()
+        .replace(/_/g, '-')}::show-all`,
+      type: 'action',
+    });
+    return (
+      this.$state
+        .go(`app.dashboard.${product.toLowerCase()}`)
+        // If the transition error, it means the state doesn't exist
+        .catch((e) => {
+          console.log(e);
+          this.$state.go('app.dashboard.products', {
+            product: product.toLowerCase(),
+          });
+        })
+    );
   }
 }
