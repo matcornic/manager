@@ -20,7 +20,6 @@ export default class ProductsController {
 
   toggleExpand() {
     this.expand = !this.expand;
-    // this.onExpand({ expand: this.expand || null });
   }
 
   static formatProductTypeTracker(productType) {
@@ -39,8 +38,7 @@ export default class ProductsController {
       this.$state
         .go(`app.dashboard.${product.toLowerCase()}`)
         // If the transition error, it means the state doesn't exist
-        .catch((e) => {
-          console.log(e);
+        .catch(() => {
           this.$state.go('app.dashboard.products', {
             product: product.toLowerCase(),
           });

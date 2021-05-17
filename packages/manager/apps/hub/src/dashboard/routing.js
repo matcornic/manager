@@ -29,22 +29,21 @@ export default /* @ngInject */ ($stateProvider, $urlRouterProvider) => {
       },
     },
     resolve: {
-      products: /* @ngInject */ ($http, $q, order) => {
-        const catalogPromise = $http.get('/hub/catalog', {
-          serviceType: 'aapi',
-        });
-        const servicesPromise = $http.get('/hub/services', {
-          serviceType: 'aapi',
-        });
-
-        return $q
-          .all([catalogPromise, servicesPromise])
-          .then((responseArray) => {
-            const { catalog } = responseArray[0].data.data;
-            const { services } = responseArray[1].data.data;
+      services: /* ngInject */ ($http) =>
+        $http
+          .get('/hub/services', {
+            serviceType: 'aapi',
+          })
+          .then((data) => data.data.data.services),
+      products: /* @ngInject */ ($http, order, services) =>
+        $http
+          .get('/hub/catalog', {
+            serviceType: 'aapi',
+          })
+          .then((data) => {
+            const { catalog } = data.data.data;
             return getProducts(services, order, catalog);
-          });
-      },
+          }),
       goToProductPage: /* @ngInject */ ($state, atInternet, trackingPrefix) => (
         product,
       ) => {
@@ -78,7 +77,6 @@ export default /* @ngInject */ ($stateProvider, $urlRouterProvider) => {
     resolvePolicy: {
       async: 'NOWAIT',
     },
-    // componentProvider: () => 'hubDashboard',
     componentProvider: /* @ngInject */ (order, numberOfServices) =>
       numberOfServices === 0 && !order ? 'hubOrderDashboard' : 'hubDashboard',
   });
