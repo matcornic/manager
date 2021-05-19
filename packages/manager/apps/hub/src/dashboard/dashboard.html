@@ -1,8 +1,6 @@
 <div data-ui-view>
     <div class="hub-dashboard-content">
-        <hub-dashboard-welcome
-            data-name="$ctrl.me.firstname"
-        ></hub-dashboard-welcome>
+        <hub-dashboard-welcome data-me="$ctrl.me"></hub-dashboard-welcome>
         <div
             class="d-flex flex-wrap w-100 minw-0 align-items-center justify-content-between"
         >
@@ -45,7 +43,6 @@
             <ovh-manager-hub-support
                 class="col-md-8 mb-3 mb-md-4 order-2 order-md-3"
                 me="$ctrl.me"
-                tickets="$ctrl.tickets"
                 tracking-prefix="{{ $ctrl.trackingPrefix }}"
             >
             </ovh-manager-hub-support>

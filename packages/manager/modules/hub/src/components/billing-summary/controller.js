@@ -8,6 +8,8 @@ export default class ManagerHubBillingSummaryCtrl {
     this.$translate = $translate;
     this.atInternet = atInternet;
     this.coreURLBuilder = coreURLBuilder;
+    this.loading = true;
+    this.billsError = false;
   }
 
   $onInit() {
@@ -15,7 +17,6 @@ export default class ManagerHubBillingSummaryCtrl {
       'dedicated',
       '#/billing/history/debt/all/pay',
     );
-    this.loading = true;
     this.$translate.refresh().then(() => {
       this.periods = [1, 3, 6].map((months) => ({
         value: months,
@@ -23,28 +24,35 @@ export default class ManagerHubBillingSummaryCtrl {
       }));
       [this.billingPeriod] = this.periods;
     });
-
-    return this.$q.all([this.loadBills(), this.loadDebt()]).finally(() => {
-      this.loading = false;
-    });
+    this.loadAll();
   }
 
-  loadBills() {
+  loadAll() {
+    this.loading = true;
     this.$q
-      .when(this.bills ? this.bills : this.fetchBills())
-      .then(({ data }) => {
-        this.bills = data;
-        this.formattedBillingPrice = this.getFormattedPrice(
-          data.total,
-          get(data, 'currency.code'),
-        );
-        this.buildPeriodFilter(data.period);
-        return this.bills;
+      .all([this.loadBills(), this.loadDebt()])
+      .catch(() => {
+        this.billsError = true;
+      })
+      .finally(() => {
+        this.loading = false;
       });
   }
 
+  loadBills() {
+    return this.$q.when(this.fetchBills()).then(({ data }) => {
+      this.bills = data;
+      this.formattedBillingPrice = this.getFormattedPrice(
+        data.total,
+        get(data, 'currency.code'),
+      );
+      this.buildPeriodFilter(data.period);
+      return this.bills;
+    });
+  }
+
   loadDebt() {
-    this.$q.when(this.debt ? this.debt : this.fetchDebt()).then(({ data }) => {
+    return this.$q.when(this.fetchDebt()).then(({ data }) => {
       this.debt = data;
       this.formattedDebtPrice = this.getFormattedPrice(
         get(data, 'dueAmount.value'),
@@ -150,6 +158,9 @@ export default class ManagerHubBillingSummaryCtrl {
     return this.refresh()
       .then(({ bills }) => {
         this.bills = bills.data;
+      })
+      .catch(() => {
+        this.billsError = true;
       })
       .finally(() => {
         this.loading = false;

@@ -77,8 +77,9 @@ export default /* @ngInject */ ($stateProvider, $urlRouterProvider) => {
     resolvePolicy: {
       async: 'NOWAIT',
     },
-    componentProvider: /* @ngInject */ (order, numberOfServices) =>
-      numberOfServices === 0 && !order ? 'hubOrderDashboard' : 'hubDashboard',
+    componentProvider: /* @ngInject */ (order, numberOfServices) => {
+      return !numberOfServices && !order ? 'hubOrderDashboard' : 'hubDashboard';
+    },
   });
 
   $urlRouterProvider.otherwise('/');

@@ -10,12 +10,19 @@ export default class ProductsController {
     this.DISPLAYED_PRODUCTS_NUMBER = DISPLAYED_PRODUCTS_NUMBER;
     this.$state = $state;
     this.atInternet = atInternet;
+    this.loading = true;
   }
 
   $onInit() {
-    this.products.then((data) => {
-      this.items = data;
-    });
+    this.skeletonServices = Array.from({ length: 6 });
+    this.skeletonProducts = Array.from({ length: 4 });
+    this.products
+      .then((data) => {
+        this.items = data;
+      })
+      .finally(() => {
+        this.loading = false;
+      });
   }
 
   toggleExpand() {
