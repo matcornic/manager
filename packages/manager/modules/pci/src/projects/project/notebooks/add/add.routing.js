@@ -11,6 +11,31 @@ export default /* @ngInject */ ($stateProvider) => {
         message,
         type,
       ) => goToNotebook(notebookInfo, message, type),
+
+      editors: /* @ngInject */ (projectId, NotebookService) =>
+        NotebookService.getEditors(projectId),
+
+      frameworks: /* @ngInject */ (projectId, NotebookService) =>
+        NotebookService.getFrameworks(projectId).then((frameworks) => {
+          return frameworks.map((f) => ({
+            ...f,
+            versions: f.versions.map((version) => ({ version })),
+          }));
+        }),
+
+      regions: /* @ngInject */ (projectId, NotebookService) =>
+        NotebookService.getRegions(projectId).then((regions) =>
+          regions.map((region) => ({
+            name: region,
+            hasEnoughQuota: () => true,
+          })),
+        ),
+
+      volumes: /* @ngInject */ (projectId, NotebookService) =>
+        NotebookService.getVolumes(projectId),
+
+      prices: /* @ngInject */ (projectId, CucPriceHelper) =>
+        CucPriceHelper.getPrices(projectId),
     },
   });
 };
