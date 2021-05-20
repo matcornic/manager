@@ -47,7 +47,7 @@ export default /* @ngInject */ ($stateProvider, $urlRouterProvider) => {
           .then((data) =>
             transformOrder($q, data.data.data.lastOrder, OrderTracking),
           ),
-      numberOfServices: /* ngInject */ ($http) => {
+      numberOfServices: /* @ngInject */ ($http) => {
         $http
           .get('/services', {
             headers: {

@@ -1,5 +1,4 @@
 import { filter, get, groupBy, map, reverse, sortBy } from 'lodash-es';
-// import { get } from 'lodash-es';
 
 const getProducts = (services, order, catalog) => {
   return get(services, 'data.count') === 0 && !order
@@ -29,7 +28,7 @@ export default /* @ngInject */ ($stateProvider, $urlRouterProvider) => {
       },
     },
     resolve: {
-      services: /* ngInject */ ($http) =>
+      services: /* @ngInject */ ($http) =>
         $http
           .get('/hub/services', {
             serviceType: 'aapi',

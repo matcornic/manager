@@ -6,8 +6,6 @@ export default {
     products: '<',
     onProductSelect: '&',
     trackingPrefix: '@',
-    // onExpand: '&?',
-    // expand: '<?',
   },
   controller,
   template,
