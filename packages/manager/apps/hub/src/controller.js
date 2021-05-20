@@ -11,18 +11,15 @@ export default class HubController {
     $rootScope,
     coreConfig,
     ovhFeatureFlipping,
-    OrderTracking,
   ) {
     this.$document = $document;
     this.$http = $http;
-    this.$q = $q;
     this.$scope = $scope;
     this.$state = $state;
     this.$rootScope = $rootScope;
     this.chatbotEnabled = false;
     this.coreConfig = coreConfig;
     this.ovhFeatureFlipping = ovhFeatureFlipping;
-    this.OrderTracking = OrderTracking;
   }
 
   $onInit() {
