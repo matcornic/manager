@@ -43,26 +43,6 @@ export default /* @ngInject */ ($stateProvider, $urlRouterProvider) => {
             const { catalog } = data.data.data;
             return getProducts(services, order, catalog);
           }),
-      goToProductPage: /* @ngInject */ ($state, atInternet, trackingPrefix) => (
-        product,
-      ) => {
-        atInternet.trackClick({
-          name: `${trackingPrefix}::product::${product
-            .toLowerCase()
-            .replace(/_/g, '-')}::show-all`,
-          type: 'action',
-        });
-        return (
-          $state
-            .go(`app.dashboard.${product.toLowerCase()}`)
-            // If the transition error, it means the state doesn't exist
-            .catch(() =>
-              $state.go('app.dashboard.products', {
-                product: product.toLowerCase(),
-              }),
-            )
-        );
-      },
       trackingPrefix: () => 'hub::dashboard',
       expandProducts: /* @ngInject */ ($state) => (expand) =>
         $state.go('.', {

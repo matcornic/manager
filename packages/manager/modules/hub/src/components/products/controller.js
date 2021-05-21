@@ -10,15 +10,21 @@ export default class ProductsController {
     this.DISPLAYED_PRODUCTS_NUMBER = DISPLAYED_PRODUCTS_NUMBER;
     this.$state = $state;
     this.atInternet = atInternet;
-    this.loading = true;
   }
 
   $onInit() {
+    this.fetchProducts();
     this.skeletonServices = Array.from({ length: 6 });
     this.skeletonProducts = Array.from({ length: 4 });
-    this.products
+  }
+
+  fetchProducts() {
+    if (this.products && this.products.length) return;
+
+    this.loading = true;
+    this.productsPromise
       .then((data) => {
-        this.items = data;
+        this.products = data;
       })
       .finally(() => {
         this.loading = false;

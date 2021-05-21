@@ -40,7 +40,7 @@ export default class ManagerHubBillingSummaryCtrl {
   }
 
   loadBills() {
-    return this.$q.when(this.fetchBills()).then(({ data }) => {
+    return this.fetchBills().then(({ data }) => {
       this.bills = data;
       this.formattedBillingPrice = this.getFormattedPrice(
         data.total,
@@ -52,7 +52,7 @@ export default class ManagerHubBillingSummaryCtrl {
   }
 
   loadDebt() {
-    return this.$q.when(this.fetchDebt()).then(({ data }) => {
+    return this.fetchDebt().then(({ data }) => {
       this.debt = data;
       this.formattedDebtPrice = this.getFormattedPrice(
         get(data, 'dueAmount.value'),
@@ -155,6 +155,7 @@ export default class ManagerHubBillingSummaryCtrl {
 
   refreshTile() {
     this.loading = true;
+    this.billsError = false;
     return this.refresh()
       .then(({ bills }) => {
         this.bills = bills.data;

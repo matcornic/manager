@@ -1,12 +1,16 @@
 export default class {
-  constructor() {
-    this.loading = true;
+  $onInit() {
+    this.fetchItems();
   }
 
-  $onInit() {
-    this.items
+  fetchItems() {
+    if (this.items && this.items.length) return;
+
+    this.loading = true;
+
+    this.itemsPromise
       .then((products) => {
-        this.allProducts = products;
+        this.items = products;
       })
       .finally(() => {
         this.loading = false;

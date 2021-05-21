@@ -28,8 +28,7 @@ export default class ManagerHubSupportCtrl {
     this.guideURL = this.RedirectionService.getURL('guides.home', {
       ovhSubsidiary: this.me.ovhSubsidiary,
     });
-    this.$q
-      .when(this.fetchTickets())
+    this.fetchTickets()
       .then(({ data, count }) => {
         if (Array.isArray(data)) {
           this.tickets = data.slice(0, MAX_TICKETS_TO_DISPLAY).map(

@@ -5,7 +5,6 @@ export default class HubController {
   constructor(
     $document,
     $http,
-    $q,
     $scope,
     $state,
     $rootScope,

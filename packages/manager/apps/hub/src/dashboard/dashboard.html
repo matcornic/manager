@@ -58,8 +58,7 @@
         <div class="hub-dashboard-product">
             <h2 data-translate="manager_hub_dashboard_services"></h2>
             <hub-products
-                products="$ctrl.products"
-                on-product-select="$ctrl.goToProductPage(productType)"
+                products-promise="$ctrl.products"
                 tracking-prefix="{{ $ctrl.trackingPrefix }}"
             ></hub-products>
         </div>
