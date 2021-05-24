@@ -14,8 +14,8 @@ export default /* @ngInject */ ($stateProvider) => {
     resolve: {
       goToAddNotebook: /* @ngInject */ ($state, projectId) => () =>
         $state.go('pci.projects.project.notebooks.add', { projectId }),
-      notebooks: /* @ngInject */ ($q, NotebookService, projectId) =>
-        NotebookService.getNotebooks(projectId),
+      /* notebooks: /!* @ngInject *!/ ($q, NotebookService, projectId) =>
+        NotebookService.getNotebooks(projectId), */
 
       goToNotebooks: ($state, CucCloudMessage, projectId) => (
         message = false,
