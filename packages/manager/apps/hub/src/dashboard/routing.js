@@ -34,15 +34,14 @@ export default /* @ngInject */ ($stateProvider, $urlRouterProvider) => {
             serviceType: 'aapi',
           })
           .then((data) => data.data.data.services),
-      products: /* @ngInject */ ($http, order, services) =>
+      catalog: /* @ngInject */ ($http) =>
         $http
           .get('/hub/catalog', {
             serviceType: 'aapi',
           })
-          .then((data) => {
-            const { catalog } = data.data.data;
-            return getProducts(services, order, catalog);
-          }),
+          .then((data) => data.data.data.catalog),
+      products: /* @ngInject */ ($http, order, services, catalog) =>
+        getProducts(services, order, catalog),
       trackingPrefix: () => 'hub::dashboard',
       expandProducts: /* @ngInject */ ($state) => (expand) =>
         $state.go('.', {
