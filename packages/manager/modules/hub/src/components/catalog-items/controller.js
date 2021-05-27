@@ -6,15 +6,17 @@ export default class {
   fetchItems() {
     if (this.items && this.items.length) return;
 
-    this.loading = true;
+    if (this.itemsPromise) {
+      this.loading = true;
 
-    this.itemsPromise
-      .then((products) => {
-        this.items = products;
-      })
-      .finally(() => {
-        this.loading = false;
-      });
+      this.itemsPromise
+        .then((products) => {
+          this.items = products;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    }
   }
 
   formatTracker(universe, product) {
