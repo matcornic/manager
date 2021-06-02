@@ -229,18 +229,19 @@ export default class PciInstancesAddController {
   }
 
   onInstanceChange() {
-    if (get(this.selectedPrivateNetwork, 'id')) {
-      this.instance.networks = [
-        {
-          networkId: get(this.selectedPrivateNetwork, 'id'),
-        },
-        {
-          networkId: get(this.publicNetwork, 'id'),
-        },
-      ];
-    } else {
-      this.instance.networks = [];
+    this.instance.networks = [];
+
+    // Add a private network (optional)
+    if (this.selectedPrivateNetwork?.id) {
+      this.instance.networks.push({
+        networkId: this.selectedPrivateNetwork.id,
+      });
     }
+
+    // Add a public network
+    this.instance.networks.push({
+      networkId: this.publicNetwork.id,
+    });
   }
 
   generateInstanceName() {
