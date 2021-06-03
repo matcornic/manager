@@ -2,15 +2,32 @@ import { SERVICE_STATES } from './payment-status-tile.constants';
 
 export default class PaymentStatusTileCtrl {
   /* @ngInject */
-  constructor(atInternet, coreConfig, coreURLBuilder) {
+  constructor(atInternet, coreURLBuilder, ovhFeatureFlipping) {
     this.atInternet = atInternet;
-    this.coreConfig = coreConfig;
+    this.coreURLBuilder = coreURLBuilder;
+    this.ovhFeatureFlipping = ovhFeatureFlipping;
 
     this.SERVICE_STATES = SERVICE_STATES;
+  }
 
-    this.autorenewLink = this.coreConfig.isRegion(['EU', 'CA'])
-      ? coreURLBuilder.buildURL('dedicated', '#/billing/autorenew')
-      : '';
+  $onInit() {
+    const featureName = 'billing:management';
+    this.loading = true;
+    return this.ovhFeatureFlipping
+      .checkFeatureAvailability(featureName)
+      .then((billingManagementAvailability) => {
+        this.autorenewLink = billingManagementAvailability.isFeatureAvailable(
+          featureName,
+        )
+          ? this.coreURLBuilder.buildURL('dedicated', '#/billing/autorenew')
+          : null;
+      })
+      .catch(() => {
+        this.autorenewLink = null;
+      })
+      .finally(() => {
+        this.loading = false;
+      });
   }
 
   onLinkClick() {

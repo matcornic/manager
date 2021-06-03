@@ -2,12 +2,13 @@ import { RENEW_URL, SERVICE_TYPE } from './service-actions.constants';
 
 export default class ServicesActionsCtrl {
   /* @ngInject */
-  constructor(atInternet, coreConfig, coreURLBuilder) {
+  constructor(atInternet, coreURLBuilder) {
     this.atInternet = atInternet;
     this.coreURLBuilder = coreURLBuilder;
-    this.autorenewLink = coreConfig.isRegion(['EU', 'CA'])
-      ? coreURLBuilder.buildURL('dedicated', '#/billing/autorenew')
-      : '';
+    this.billingLink = this.coreURLBuilder.buildURL(
+      'dedicated',
+      '#/billing/history',
+    );
 
     this.SERVICE_TYPE = SERVICE_TYPE;
   }
@@ -17,6 +18,10 @@ export default class ServicesActionsCtrl {
       ? `&serviceType=${this.service.serviceType}`
       : '';
 
+    this.autorenewLink = this.billingManagementAvailability
+      ? this.coreURLBuilder.buildURL('dedicated', '#/billing/autorenew')
+      : null;
+
     this.commitmentLink =
       (this.getCommitmentLink && this.getCommitmentLink(this.service)) ||
       `${this.autorenewLink}/${this.service.id}/commitment`;
@@ -24,15 +29,12 @@ export default class ServicesActionsCtrl {
       (this.getCancelCommitmentLink &&
         this.getCancelCommitmentLink(this.service)) ||
       `${this.autorenewLink}/${this.service.id}/cancel-commitment`;
-    this.warningLink = `${this.autorenewLink}/warn-nic?nic=${this.service.contactBilling}`;
-    this.billingLink = this.coreURLBuilder.buildURL(
-      'dedicated',
-      '#/billing/history',
-    );
-    this.updateLink = `${this.autorenewLink}/update?serviceId=${this.service.serviceId}${serviceTypeParam}`;
     this.cancelResiliationLink =
       (this.getCancelResiliationLink && this.getCancelResiliationLink()) ||
       `${this.autorenewLink}/cancel-resiliation?serviceId=${this.service.serviceId}${serviceTypeParam}`;
+
+    this.warningLink = `${this.autorenewLink}/warn-nic?nic=${this.service.contactBilling}`;
+    this.updateLink = `${this.autorenewLink}/update?serviceId=${this.service.serviceId}${serviceTypeParam}`;
     this.deleteLink =
       this.service.serviceType &&
       `${this.autorenewLink}/delete-${this.service.serviceType
@@ -69,7 +71,8 @@ export default class ServicesActionsCtrl {
       default:
         this.resiliateLink = this.service.canResiliateByEndRule()
           ? resiliationByEndRuleLink
-          : `${this.autorenewLink}/delete?serviceId=${this.service.serviceId}${serviceTypeParam}`;
+          : this.autorenewLink &&
+            `${this.autorenewLink}/delete?serviceId=${this.service.serviceId}${serviceTypeParam}`;
         break;
     }
   }
