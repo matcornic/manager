@@ -1,4 +1,5 @@
 import find from 'lodash/find';
+import Notebook from '../Notebook.class';
 
 export default /* @ngInject */ ($stateProvider) => {
   $stateProvider.state('pci.projects.project.notebooks.dashboard', {
@@ -10,7 +11,7 @@ export default /* @ngInject */ ($stateProvider) => {
       notebookId: /* @ngInject */ ($transition$) =>
         $transition$.params().notebookId,
       notebook: /* @ngInject */ (notebookId, notebooks) =>
-        find(notebooks, { id: notebookId }),
+        new Notebook(find(notebooks, { id: notebookId })),
       breadcrumb: /* @ngInject */ (notebook) => notebook.id,
       generalInformationLink: /* @ngInject */ ($state, notebookId, projectId) =>
         $state.href(
@@ -20,6 +21,11 @@ export default /* @ngInject */ ($stateProvider) => {
             notebookId,
           },
         ),
+      attachDataLink: /* @ngInject */ ($state, notebookId, projectId) =>
+        $state.href('pci.projects.project.notebooks.dashboard.attach-data', {
+          projectId,
+          notebookId,
+        }),
     },
     redirectTo: 'pci.projects.project.notebooks.dashboard.general-information',
   });
