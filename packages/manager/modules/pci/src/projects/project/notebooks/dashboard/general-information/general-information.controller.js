@@ -1,10 +1,17 @@
+import {
+  NOTEBOOK_FLAVOR_TYPE,
+  NOTEBOOK_VOLUME_TYPE,
+} from '../../Notebook.constants';
+
 export default class {
   /* @ngInject */
-  constructor($translate, CucCloudMessage, CucRegionService, NotebookService) {
+  constructor($translate, coreURLBuilder, CucCloudMessage) {
     this.$translate = $translate;
     this.CucCloudMessage = CucCloudMessage;
-    this.CucRegionService = CucRegionService;
-    this.NotebookService = NotebookService;
+
+    this.NOTEBOOK_VOLUME_TYPE = NOTEBOOK_VOLUME_TYPE;
+    this.NOTEBOOK_FLAVOR_TYPE = NOTEBOOK_FLAVOR_TYPE;
+    this.billingUrl = coreURLBuilder.buildURL('dedicated', '#/billing/history');
   }
 
   $onInit() {
@@ -25,5 +32,9 @@ export default class {
 
   refreshMessages() {
     this.messages = this.messageHandler.getMessages();
+  }
+
+  onLabelRemove(labels, label) {
+    console.log('ZM:: onLabelRemove.label', label, this.notebook);
   }
 }

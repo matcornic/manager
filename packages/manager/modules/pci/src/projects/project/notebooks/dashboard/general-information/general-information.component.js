@@ -4,8 +4,12 @@ import template from './general-information.html';
 export default {
   bindings: {
     notebook: '<',
+    flavors: '<',
     projectId: '<',
     trackNotebooks: '<',
+    goToAttachData: '<',
+    addTag: '<',
+    deleteNotebook: '<',
   },
   controller,
   template,
