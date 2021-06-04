@@ -1,3 +1,4 @@
+import controller from './dashboard.controller';
 import template from './dashboard.html';
 
 export default {
@@ -6,6 +7,11 @@ export default {
     notebook: '<',
     generalInformationLink: '<',
     guideUrl: '<',
+    reloadState: '<',
+    needRefresh: '<',
+    killTasks: '<',
+    waitNotebookToStartOrStop: '<',
   },
+  controller,
   template,
 };
