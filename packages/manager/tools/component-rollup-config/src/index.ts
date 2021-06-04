@@ -73,9 +73,6 @@ const generateConfig = (opts, pluginsOpts) =>
           babelrc: false,
           exclude: 'node_modules/**',
           plugins: [
-            '@babel/plugin-proposal-class-properties',
-            '@babel/plugin-proposal-optional-chaining',
-            '@babel/plugin-proposal-private-methods',
             '@babel/plugin-syntax-dynamic-import',
             'babel-plugin-angularjs-annotate',
           ],
