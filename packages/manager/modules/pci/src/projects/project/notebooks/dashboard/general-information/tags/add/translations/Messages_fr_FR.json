@@ -1,0 +1,6 @@
+{
+  "pci_notebooks_general_information_info_tags_add_title": "Ajouter un nouveau label",
+  "pci_notebooks_general_information_info_tags_add_description": "Vous allez créer un nouveau label pour le notebook {{ name }}.",
+  "pci_notebooks_general_information_info_tags_add_action_add": "Ajouter un label au notebook",
+  "pci_notebooks_general_information_info_tags_add_action_cancel": "Annuler"
+}
