@@ -3,7 +3,12 @@ import map from 'lodash/map';
 
 import Container from '../container.class';
 
-import { OBJECT_CONTAINER_TYPES } from '../containers.constants';
+import {
+  OBJECT_CONTAINER_OFFERS,
+  OBJECT_CONTAINER_OFFERS_LABELS,
+  OBJECT_CONTAINER_TYPE_OFFERS,
+  OBJECT_CONTAINER_TYPES,
+} from '../containers.constants';
 
 export default class PciStoragesContainersAddController {
   /* @ngInject */
@@ -17,6 +22,9 @@ export default class PciStoragesContainersAddController {
     this.CucCloudMessage = CucCloudMessage;
     this.PciProjectStorageBlockService = PciProjectStorageBlockService;
     this.PciProjectStorageContainersService = PciProjectStorageContainersService;
+    this.OBJECT_CONTAINER_OFFERS = OBJECT_CONTAINER_OFFERS;
+    this.OBJECT_CONTAINER_OFFERS_LABELS = OBJECT_CONTAINER_OFFERS_LABELS;
+    this.OBJECT_CONTAINER_TYPE_OFFERS = OBJECT_CONTAINER_TYPE_OFFERS;
   }
 
   $onInit() {
