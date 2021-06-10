@@ -6,6 +6,19 @@ export default class Datacenter {
   }
 
   hasEnoughQuotaForFlavors(flavor, flavorCount = 1) {
+    console.log('ZM:: this.quota', this.quota);
+    console.log(
+      'ZM:: hasEnoughQuotaForFlavors.Number',
+      this.checkInstancesNumber(flavorCount),
+    );
+    console.log(
+      'ZM:: hasEnoughQuotaForFlavors.Ram',
+      this.checkRamQuota(flavor, flavorCount),
+    );
+    console.log(
+      'ZM:: hasEnoughQuotaForFlavors.Cores',
+      this.checkCoresQuota(flavor, flavorCount),
+    );
     if (has(this.quota, 'instance')) {
       return (
         this.checkInstancesNumber(flavorCount) &&
