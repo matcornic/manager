@@ -108,10 +108,10 @@ export default class NotebookService {
       .then(({ data }) => data);
   }
 
-  getFlavors(serviceName) {
+  getFlavors(serviceName, region) {
     return this.$http
       .get(
-        `/cloud/project/${serviceName}/ai/capabilities/serving/flavor`,
+        `/cloud/project/${serviceName}/ai/capabilities/region/${region}/flavor`,
         NotebookService.getIcebergHeaders(),
       )
       .then(({ data }) => data);

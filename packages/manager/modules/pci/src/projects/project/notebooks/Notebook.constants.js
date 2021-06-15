@@ -33,6 +33,10 @@ export const NOTEBOOK_AUTOMATION_INFO = {
   DEFAULT: 'https://docs.ovh.com/fr/logs-data-platform/kubernetes-fluent-bit/',
 };
 
+export const NOTEBOOK_STORAGE_INFO = {
+  DEFAULT: 'https://docs.ovh.com/gb/en/ai-training/data/',
+};
+
 export default {
   NOTEBOOK_TAGS,
   NOTEBOOK_STATUS,
@@ -40,5 +44,6 @@ export default {
   NOTEBOOK_VOLUME_TYPE,
   NOTEBOOK_FLAVOR_TYPE,
   NOTEBOOK_AUTOMATION_INFO,
+  NOTEBOOK_STORAGE_INFO,
   NOTEBOOK_POLLER_NAMESPACES,
 };
