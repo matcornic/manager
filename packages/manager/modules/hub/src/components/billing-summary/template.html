@@ -10,7 +10,7 @@
         class="manager-hub-billing-summary__bill-total"
         >…</span
     >
-    <div data-ng-if="$ctrl.bills && !$ctrl.loading">
+    <div data-ng-if="$ctrl.bills && !$ctrl.billsError && !$ctrl.loading">
         <oui-select
             data-model="$ctrl.billingPeriod"
             data-items="$ctrl.periods"

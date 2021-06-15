@@ -69,6 +69,8 @@ export default class ManagerHubBillingSummaryCtrl {
     this.loading = true;
     return this.fetchBills(this.billingPeriod.value)
       .then(({ data }) => {
+        if (data.status === 'ERROR') return;
+
         this.bills = data;
         this.formattedBillingPrice = this.getFormattedPrice(
           data.total,
@@ -82,11 +84,13 @@ export default class ManagerHubBillingSummaryCtrl {
   }
 
   getFormattedPrice(price, currency) {
-    return Intl.NumberFormat(this.$translate.use().replace('_', '-'), {
-      style: 'currency',
-      currency: currency || get(this.me, 'currency.code'),
-      maximumSignificantdigits: 1,
-    }).format(price);
+    return currency && price
+      ? Intl.NumberFormat(this.$translate.use().replace('_', '-'), {
+          style: 'currency',
+          currency: currency || get(this.me, 'currency.code'),
+          maximumSignificantdigits: 1,
+        }).format(price)
+      : '';
   }
 
   buildPeriodFilter({ from, to }) {
