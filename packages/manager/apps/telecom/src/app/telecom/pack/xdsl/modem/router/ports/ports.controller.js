@@ -8,7 +8,6 @@ import { PACK_XDSL } from './ports.constants';
 export default /* @ngInject */ function XdslModemPortsCtrl(
   $stateParams,
   $translate,
-  $scope,
   OvhApiXdslModemPort,
   TucToast,
   PackXdslModemPortObject,

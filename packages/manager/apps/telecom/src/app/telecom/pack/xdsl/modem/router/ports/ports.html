@@ -65,6 +65,10 @@
                             data-translate="xdsl_modem_ports_internal_port"
                         ></span>
                     </th>
+                    <th
+                        scope="col"
+                        data-translate="xdsl_modem_ports_internal_port_end"
+                    ></th>
                     <th data-translate="common_actions"></th>
                 </tr>
             </thead>
@@ -98,9 +102,13 @@
                     ></td>
                     <td
                         data-title="{{ 'xdsl_modem_ports_internal_port' | translate }}"
+                        data-ng-bind="port.internalPort"
                     >
-                        <span class="d-block" data-ng-bind="port.internalPort"></span>
-                        <span class="d-block" data-ng-bind="port.internalPortEnd"></span>
+                    </td>
+                    <td
+                        data-title="{{ 'xdsl_modem_ports_internal_port_end' | translate }}"
+                        data-ng-bind="port.internalPortEnd"
+                    >
                     </td>
                     <td class="dropdown">
                         <div
@@ -309,23 +317,34 @@
                             id="internalPort"
                             class="oui-input"
                             data-ng-model="port.tempValue.internalPort"
-                            placeholder="{{PortCtrl.PACK_XDSL.internalPortPlaceHolder}}"
                             maxlength="{{PortCtrl.PACK_XDSL.maxlength}}"
                             min="{{PortCtrl.PACK_XDSL.min}}"
+                            max="{{PortCtrl.PACK_XDSL.max}}"
                             required
-                            max="{{PortCtrl.PACK_XDSL.maxlength}}"
+                            placeholder="{{PortCtrl.PACK_XDSL.internalPortPlaceHolder}}"
                         />
+                    </td>
+                    <td
+                        data-title="{{ 'xdsl_modem_ports_internal_port_end' | translate }}"
+                        class="form-group"
+                        data-ng-class="{ 'has-error': localForm.internalPortEnd.$touched && localForm.internalPortEnd.$invalid }"
+                    >
+                        <label
+                            for="internalPortEnd"
+                            data-translate="xdsl_modem_ports_port_end"
+                            class="sr-only"
+                        ></label>
                         <input
                             type="number"
                             name="internalPortEnd"
                             id="internalPortEnd"
                             class="oui-input"
                             data-ng-model="port.tempValue.internalPortEnd"
-                            placeholder="{{PortCtrl.PACK_XDSL.internalPortEndPlaceHolder}}"
                             maxlength="{{PortCtrl.PACK_XDSL.maxlength}}"
                             min="{{PortCtrl.PACK_XDSL.min}}"
+                            max="{{PortCtrl.PACK_XDSL.max}}"
                             required
-                            max="{{PortCtrl.PACK_XDSL.maxlength}}"
+                            placeholder="{{PortCtrl.PACK_XDSL.internalPortEndPlaceHolder}}"
                         />
                     </td>
 
