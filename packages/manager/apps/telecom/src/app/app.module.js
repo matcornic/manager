@@ -343,9 +343,12 @@ export default (containerEl, environment) => {
     )
     .controller('TelecomAppCtrl', TelecomAppCtrl)
     .run(
-      /* @ngInject */ ($rootScope, $state) => {
+      /* @ngInject */ ($log, $rootScope, $state) => {
         $state.defaultErrorHandler((error) => {
           if (error.type === RejectType.ERROR) {
+            // Useful for our error monitoring tool.
+            $log.error(error);
+
             $rootScope.$emit('ovh::sidebar::hide');
             $state.go(
               'telecomError',

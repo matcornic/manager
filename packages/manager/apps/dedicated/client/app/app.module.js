@@ -298,6 +298,7 @@ export default (containerEl, environment) => {
     .run(
       /* @ngInject */ (
         $location,
+        $log,
         $rootScope,
         $state,
         $transitions,
@@ -359,6 +360,9 @@ export default (containerEl, environment) => {
 
         $state.defaultErrorHandler((error) => {
           if (error.type === RejectType.ERROR && !error.handled) {
+            // Useful for our error monitoring tool.
+            $log.error(error);
+
             $rootScope.$emit('ovh::sidebar::hide');
             $state.go(
               'error',

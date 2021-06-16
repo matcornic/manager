@@ -562,9 +562,12 @@ export default (containerEl, environment) => {
     })
     .constant('UNIVERSE', 'WEB')
     .run(
-      /* @ngInject */ ($rootScope, $state) => {
+      /* @ngInject */ ($log, $rootScope, $state) => {
         $state.defaultErrorHandler((error) => {
           if (error.type === RejectType.ERROR) {
+            // Useful for our error monitoring tool.
+            $log.error(error);
+
             $rootScope.$emit('ovh::sidebar::hide');
             $state.go(
               'error',
