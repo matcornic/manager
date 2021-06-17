@@ -1,5 +1,10 @@
 {
   "billing_payment_method_split_payment_title": "Split Payment",
+<<<<<<< HEAD
+  "billing_payment_method_split_payment_information": "Le mécanisme de Split Payment s'applique aux sociétés, associations et entités liées ou contrôlées par l'administration publique qui figurent sur les listes officielles.",
+=======
+  "billing_payment_method_split_payment_warning": "Le mécanisme de Split Payment s'applique aux sociétés, associations et entités liées ou contrôlées par l'administration publique qui figurent sur les listes officielles.",
+>>>>>>> 3fd23fe452 ...fix: fix translations
   "billing_payment_method_split_payment_information": "Le mécanisme de Split Payment s'applique aux sociétés, associations et entités liées ou contrôlées par l'administration publique qui figurent sur les listes officielles.",
   "billing_payment_method_split_payment_activate": "Activer le Split Payment",
   "billing_payment_method_split_payment_deactivate": "Désactiver le Split Payment",
