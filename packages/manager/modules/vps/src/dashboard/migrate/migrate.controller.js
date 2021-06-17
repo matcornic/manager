@@ -4,7 +4,8 @@ import { MIGRATE_FAQ_LINK } from './migrate.constants';
 
 export default class {
   /* @ngInject */
-  constructor() {
+  constructor(atInternet) {
+    this.atInternet = atInternet;
     this.MIGRATE_FAQ_LINK = MIGRATE_FAQ_LINK;
   }
 
@@ -32,6 +33,14 @@ export default class {
       memory: { size: memory },
       storage: { disks: [{ capacity: storage }] },
     };
+  }
+
+  cancel() {
+    this.atInternet.trackClick({
+      name: `${this.migrationTrackingPrefix}::cancel`,
+      type: 'action',
+    });
+    return this.goBack();
   }
 
   getRenewablePrice() {

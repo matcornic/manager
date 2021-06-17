@@ -3,18 +3,27 @@ import { MIGRATE_CONFIRMATION_INPUT_PATTERN } from './migrate-confirm.constants'
 
 export default class {
   /* @ngInject */
-  constructor($translate, VpsMigrationService) {
+  constructor($translate, atInternet, VpsMigrationService) {
     this.$translate = $translate;
     this.MIGRATE_CONFIRMATION_INPUT_PATTERN = MIGRATE_CONFIRMATION_INPUT_PATTERN;
+    this.atInternet = atInternet;
     this.vpsMigrationService = VpsMigrationService;
   }
 
   cancel() {
+    this.atInternet.trackClick({
+      name: `${this.migrationConfirmTrackingPrefix}::cancel`,
+      type: 'action',
+    });
     this.goBackToMigrate();
   }
 
   migrateVps() {
     this.loading = true;
+    this.atInternet.trackClick({
+      name: `${this.migrationConfirmTrackingPrefix}::confirm`,
+      type: 'action',
+    });
     return this.vpsMigrationService
       .migrateVps(this.serviceName)
       .then(() => {
